@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:desktop_window/desktop_window.dart';
 
 void main() => runApp(WinApp());
 
@@ -23,14 +24,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          height: 200,
-          width: 100,
-          color: Colors.yellow,
-        ),
-      ),
-    );
+    DesktopWindow.setWindowSize(Size(800, 600));
+    DesktopWindow.setMinWindowSize(Size(400, 400));
+
+    // DesktopWindow.setMaxWindowSize(Size(1366, 768));
+
+    return Scaffold(body: Container(child: Text('napis na środku')));
   }
 }
