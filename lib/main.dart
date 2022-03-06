@@ -1,7 +1,17 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:desktop_window/desktop_window.dart';
+import 'package:flutter/services.dart';
+import 'package:window_size/window_size.dart';
 
-void main() => runApp(WinApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('Fantastyczne nazwy');
+    setWindowMinSize(const Size(400, 300));
+    setWindowMaxSize(Size.infinite);
+  }
+  runApp(WinApp());
+}
 
 class WinApp extends StatelessWidget {
   @override
@@ -22,13 +32,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final myController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    myController.addListener(() {
+      // print("${myController.text}");
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the widget tree.
+    // This also removes the _printLatestValue listener.
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    DesktopWindow.setWindowSize(Size(800, 600));
-    DesktopWindow.setMinWindowSize(Size(400, 400));
-
-    // DesktopWindow.setMaxWindowSize(Size(1366, 768));
-
-    return Scaffold(body: Container(child: Text('napis na środku')));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Fantastyczne nazwy'),
+      ),
+      body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(),
+              ElevatedButton(onPressed: () {}, child: Text("kliknij mnie")),
+              Text('przykładowy tekst')
+            ],
+          )),
+    );
   }
 }
