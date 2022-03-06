@@ -37,6 +37,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String txt =
       "Wpisz powyżej sylaby oddzielając je przecinkiem i kliknij przycisk generuj";
 
+  int syllabes_amount = 3;
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -52,15 +54,14 @@ class _MyHomePageState extends State<MyHomePage> {
     syllabes = syllabes.replaceAll(" ", '');
     List<String> syllabes_list = syllabes.split(",");
 
-    // if (syllabes_list.length <3) {
+    if (syllabes_list.length < syllabes_amount) {
+      return "Liczba sylab musi wynosić conajmniej ${syllabes_amount}";
+    }
 
-    // }
-
-    int liczba_sylab = 3;
     var rnd = Random();
     String wynik = "";
 
-    for (int i = 0; i < liczba_sylab; i++) {
+    for (int i = 0; i < syllabes_amount; i++) {
       int losowa_liczba = rnd.nextInt(syllabes_list.length);
       String sylaba = syllabes_list[losowa_liczba];
       syllabes_list.removeAt(losowa_liczba);
@@ -69,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return wynik;
   }
+
+  var syllabes_amount_items = [2, 3, 4, 5];
+  var currentItem = "3";
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +98,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     "generuj",
                     style: TextStyle(fontSize: 25),
                   )),
+              Row(
+                children: [
+                  Text('Liczba sylab: ', style: TextStyle(fontSize: 30)),
+                  Center(
+                      child: DropdownButton(
+                          items: <int>[2, 3, 4, 5].map((int value) {
+                            return DropdownMenuItem<String>(
+                              value: value.toString(),
+                              child: Text(value.toString()),
+                            );
+                          }).toList(),
+                          value: currentItem,
+                          onChanged: (value) {
+                            currentItem = value.toString();
+                            setState(() {
+                              syllabes_amount = int.parse(value.toString());
+                            });
+                          }))
+                ],
+              ),
               Text(txt, style: TextStyle(fontSize: 30))
             ],
           )),
