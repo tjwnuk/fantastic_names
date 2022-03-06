@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:window_size/window_size.dart';
+import 'dart:math';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,20 +34,40 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final myController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    myController.addListener(() {
-      // print("${myController.text}");
-    });
-  }
+  String txt =
+      "Wpisz powyżej sylaby oddzielając je przecinkiem i kliknij przycisk generuj";
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
-    // This also removes the _printLatestValue listener.
+    // Clean up the controller when the widget is disposed.
     myController.dispose();
     super.dispose();
+  }
+
+  String fantasticNames(String syllabes) {
+    //['gh' , 'aa' , 'ver' , 'tou' , 'ki']
+    // gh, aa, ver, tou, ki
+
+    // List<String> sylaby = ['gh', 'aa', 'ver', 'tou', 'ki'];
+    syllabes = syllabes.replaceAll(" ", '');
+    List<String> syllabes_list = syllabes.split(",");
+
+    // if (syllabes_list.length <3) {
+
+    // }
+
+    int liczba_sylab = 3;
+    var rnd = Random();
+    String wynik = "";
+
+    for (int i = 0; i < liczba_sylab; i++) {
+      int losowa_liczba = rnd.nextInt(syllabes_list.length);
+      String sylaba = syllabes_list[losowa_liczba];
+      syllabes_list.removeAt(losowa_liczba);
+      wynik = wynik + sylaba;
+    }
+
+    return wynik;
   }
 
   @override
@@ -60,9 +80,21 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              TextField(),
-              ElevatedButton(onPressed: () {}, child: Text("kliknij mnie")),
-              Text('przykładowy tekst')
+              TextField(
+                controller: myController,
+                style: TextStyle(fontSize: 25),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      txt = fantasticNames(myController.text);
+                    });
+                  },
+                  child: Text(
+                    "generuj",
+                    style: TextStyle(fontSize: 25),
+                  )),
+              Text(txt, style: TextStyle(fontSize: 30))
             ],
           )),
     );
